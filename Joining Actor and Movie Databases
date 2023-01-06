@@ -1,0 +1,52 @@
+- Create an actors database
+
+CREATE TABLE actors (ID INTEGER PRIMARY KEY, name TEXT, age INTEGER, spouse_id INTEGER);
+
+INSERT INTO actors VALUES (1, "Justin Bartha", 44, 16);
+INSERT INTO actors VALUES (2, "Kristen Bell", 42, 17);
+INSERT INTO actors VALUES (3, "Keanu Reeves", 58, 0);
+INSERT INTO actors VALUES (4, "David Tennant", 51, 18);
+INSERT INTO actors VALUES (5, "Noah Centineo", 26, 0);
+INSERT INTO actors VALUES (6, "Jenna Ortega", 20, 0);
+INSERT INTO actors VALUES (7, "Dylan O'Brien", 31, 0);
+INSERT INTO actors VALUES (8, "Florence Pugh", 27, 0);
+INSERT INTO actors VALUES (9, "Dylan Arnold", 28, 0);
+INSERT INTO actors VALUES (10, "Leah Lewis", 26, 0);
+INSERT INTO actors VALUES (11, "Lana Condor", 25, 0);
+INSERT INTO actors VALUES (12, "Alexandra Daddario", 36, 0);
+INSERT INTO actors VALUES (13, "Henry Golding", 35, 19);
+INSERT INTO actors VALUES (14, "Sam Claflin", 36, 0);
+INSERT INTO actors VALUES (15, "Ryan Reynolds", 46, 20);
+INSERT INTO actors VALUES (16, "Lia Smith", 38, 1);
+INSERT INTO actors VALUES (17, "Dax Shepard", 48, 2);
+INSERT INTO actors VALUES (18, "Georgia Tennant", 38, 4);
+INSERT INTO actors VALUES (19, "Liv Lo", 37, 13);
+INSERT INTO actors VALUES (20, "Blake Lively", 35, 15);
+
+- Create a movie database
+
+CREATE TABLE movies (ID INTEGER PRIMARY KEY, name TEXT, actor_id INTEGER, year INTEGER);
+INSERT INTO movies VALUES (1, "National Treasure", 1, 2004);
+INSERT INTO movies VALUES (2, "Love and Monsters", 7, 2020);
+INSERT INTO movies VALUES (3, "Deadpool", 15, 2016);
+INSERT INTO movies VALUES (4, "To All the Boys I've Loved Before", 11, 2018);
+INSERT INTO movies VALUES (5, "Veronica Mars", 2, 2014);
+INSERT INTO movies VALUES (6, "The Babysitter: Killer Queen", 6, 2020);
+INSERT INTO movies VALUES (7, "Me Before You", 14, 2016);
+INSERT INTO movies VALUES (8, "Bill & Ted's Excellent Adventure", 3, 1989);
+INSERT INTO movies VALUES (9, "Halloween", 9, 2018);
+INSERT INTO movies VALUES (10, "Fright Night", 4, 2011);
+INSERT INTO movies VALUES (11, "Crazy Rich Asians", 13, 2018);
+INSERT INTO movies VALUES (12, "The Half of It", 10, 2020);
+INSERT INTO movies VALUES (13, "Baywatch", 12, 2017);
+INSERT INTO movies VALUES (14, "Swiped", 5, 2018);
+INSERT INTO movies VALUES (15, "Fair Game", 16, 2005);
+INSERT INTO movies VALUES (16, "Midsommar", 8, 2019);
+INSERT INTO movies VALUES (17, "Without a Paddle", 17, 2004);
+INSERT INTO movies VALUES (18, "A Simple Favor", 20, 2018);
+
+- Inner Join to show actors names next to the movies they are in
+SELECT actors.name, movies.name FROM actors JOIN movies ON actors.id = movies.actor_id;
+
+- Self inner join to show actors names next to their spouses without duplicates
+SELECT actors.name, a.name as "spouse name" FROM actors JOIN actors a ON actors.id = a.spouse_id AND actors.id < a.id;
