@@ -1,0 +1,35 @@
+--In this SQL I'm querying a database with multiple tables of data in it in order to answer questions about customer and order data.
+
+--How many orders were placed in January? 
+SELECT COUNT(orderID) FROM BIT_DB.JanSales
+WHERE orderID <> 'Order ID' AND orderID <> '';
+
+--How many of those orders were for an iPhone?
+SELECT COUNT(orderID) FROM BIT_DB.JanSales
+WHERE orderID <> 'Order ID' AND orderID <> '' AND Product = 'iPhone';
+
+--Select the customer account numbers for all the orders that were placed in February.
+SELECT C.acctnum FROM BIT_DB.customers C
+INNER JOIN BIT_DB.FebSales F
+ON C.order_id = F.orderID
+WHERE F.orderID <> 'Order ID' AND F.orderID <> '';
+
+--Which product was the cheapest one sold in January, and what was the price?
+SELECT distinct Product, price FROM BIT_DB.JanSales
+WHERE price in (SELECT MIN(price) FROM BIT_DB.JanSales);
+
+--What is the total revenue for each product sold in January?
+SELECT product, SUM(quantity)*price as revenue FROM BIT_DB.JanSales
+GROUP BY product;
+
+--Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+SELECT product, quantity, SUM(quantity)*price as revenue FROM BIT_DB.FebSales
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY product;
+
+--How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+SELECT count(DISTINCT C.acctnum) AS Customers, AVG(F.quantity*F.price) as 'Average Spent' 
+FROM BIT_DB.FebSales F
+LEFT JOIN BIT_DB.customers C
+ON F.orderID = C.order_id
+WHERE F.quantity > 2 AND F.orderID <> 'Order ID' AND F.orderID <> '';
