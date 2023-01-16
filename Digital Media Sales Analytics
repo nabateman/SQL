@@ -1,0 +1,111 @@
+--In this SQL code I am querying a digital media sales database to find answers to the questions below:
+
+--1 Show Customers (their full names, customer ID, and country) who are not in the US.
+SELECT CustomerID, FirstName, LastName, Country
+FROM chinook.customers
+WHERE Country <> 'USA';
+
+--2 Show only the Customers from Brazil.
+SELECT * FROM chinook.customers
+WHERE Country='Brazil';
+
+--3 Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT c.FirstName, c.LastName, i.InvoiceID, i.InvoiceDate, i.BillingCountry
+FROM chinook.invoices i LEFT JOIN chinook.customers c
+ON i.CustomerId=c.CustomerId
+WHERE i.BillingCountry='Brazil';
+
+--4 Show the Employees who are Sales Agents.
+SELECT * FROM chinook.employees
+WHERE title='Sales Support Agent';
+
+--5 Find a unique/distinct list of billing countries from the Invoice table.
+SELECT BillingCountry
+FROM chinook.invoices
+GROUP BY BillingCountry;
+
+--6 Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT e.FirstName, e.LastName, i.InvoiceID
+FROM chinook.invoices i 
+JOIN chinook.customers c
+ON i.customerID=c.CustomerID
+JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeID;
+
+--7 Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT i.Total, c.FirstName||' '||c.LastName as 'Customer Name', c.Country, e.FirstName||' '||e.LastName as 'Employee Name'
+FROM chinook.invoices i 
+JOIN chinook.customers c
+ON i.customerID=c.CustomerID
+JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeID;
+
+--8 How many Invoices were there in 2009?
+SELECT COUNT(*)
+FROM chinook.Invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--9 What are the total sales for 2009?
+SELECT SUM(Total)
+FROM chinook.Invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--10 Write a query that includes the purchased track name with each invoice line ID.
+SELECT t.Name, i.InvoiceLineID 
+FROM chinook.tracks t JOIN chinook.invoice_items i
+ON t.TrackId=i.TrackId;
+
+--11 Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT t.Name as Track, a.Name as Artist, i.InvoiceLineID FROM chinook.artists a 
+INNER JOIN chinook.albums al ON a.ArtistId=al.ArtistId
+INNER JOIN chinook.tracks t ON al.AlbumId=t.AlbumId
+INNER JOIN chinook.invoice_items i ON t.TrackId=i.TrackId;
+
+--12 Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT t.Name as Track, a.Title, m.Name as 'Media Type', g.Name as Genre
+FROM chinook.tracks t
+JOIN chinook.albums a ON a.AlbumId=t.AlbumId
+JOIN chinook.genres g ON g.GenreId=t.GenreId
+JOIN chinook.media_types m ON t.MediaTypeId=m.MediaTypeId;
+
+--13 Show the total sales made by each sales agent.
+SELECT e.FirstName||' '||e.LastName as Employee_Name, ROUND(SUM(i.Total),2) AS Total_Sales
+FROM chinook.invoices i 
+JOIN chinook.customers c
+ON i.customerID=c.CustomerID
+JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeID
+GROUP BY Employee_Name;
+
+--14 Which sales agent made the most dollars in sales in 2009?
+SELECT e.FirstName||' '||e.LastName as Employee_Name, ROUND(SUM(i.Total),2) AS Total_Sales
+FROM chinook.invoices i 
+JOIN chinook.customers c
+ON i.customerID=c.CustomerID
+JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeID
+WHERE InvoiceDate LIKE '2009%'
+GROUP BY Employee_Name
+ORDER BY Total_Sales DESC LIMIT 1;
+
+--15 What tracks are on the TV Shows playlist?
+SELECT T.Name FROM chinook.playlists p
+JOIN chinook.playlist_track pt
+ON p.PlaylistId=pt.PlaylistId
+JOIN chinook.tracks t
+ON pt.TrackId=t.TrackId
+WHERE p.Name='TV Shows';
+
+--16 Which employee has worked there the longest?
+SELECT FirstName||' '||LastName as Employee_Name, HireDate
+FROM chinook.employees
+ORDER BY HireDate ASC Limit 1;
+
+--17 From what genre are the most songs purchased?
+SELECT COUNT(DISTINCT i.TrackID) as Tracks_Purchased, g.Name
+FROM chinook.genres g INNER JOIN chinook.tracks t
+ON g.GenreId=t.GenreId
+INNER JOIN chinook.invoice_items i
+ON t.TrackId=i.TrackId
+GROUP BY g.Name
+ORDER BY Tracks_Purchased DESC LIMIT 1;
