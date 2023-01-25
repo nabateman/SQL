@@ -1,0 +1,49 @@
+In this SQL I'm querying multiple databases in order to solve a murder mystery.
+
+SELECT desc FROM crime_scene_report
+WHERE date=20180115 AND city='SQL City' AND type='murder';
+
+SELECT id, address_number, address_street_name FROM person
+WHERE address_street_name='Northwestern Dr'
+ORDER BY address_number DESC LIMIT 1;
+
+SELECT id FROM person
+WHERE address_street_name='Franklin Ave'
+AND name LIKE 'Annabel%';
+
+SELECT * FROM interview
+WHERE person_id IN (14887,16371);
+
+SELECT * FROM get_fit_now_check_in ci
+JOIN get_fit_now_member m
+ON ci.membership_id=m.id
+WHERE m.person_id=16371;
+
+SELECT ci.membership_id, m.person_id, m.name FROM get_fit_now_check_in ci
+JOIN get_fit_now_member m
+ON ci.membership_id=m.id
+WHERE membership_id LIKE '48Z%' 
+AND m.membership_status='gold'
+AND ci.check_in_date=20180109;
+
+SELECT p.id, p.name FROM person p
+JOIN drivers_license dl
+ON p.license_id=dl.id
+WHERE plate_number LIKE '%H42W%';
+
+SELECT transcript FROM interview
+WHERE person_id=67318;
+
+SELECT p.id, p.name, p.ssn, dl.height, i.annual_income FROM drivers_license dl
+JOIN person p
+ON dl.id=p.license_id
+JOIN income i
+ON p.ssn=i.ssn
+WHERE dl.gender='female' AND dl.hair_color='red' AND dl.car_make='Tesla';
+
+SELECT COUNT(date), person_id FROM facebook_event_checkin
+GROUP BY person_id
+HAVING date LIKE '201712%' AND event_name='SQL Symphony Concert'AND COUNT(date)=3;
+
+INSERT INTO solution VALUES (1, 'Miranda Priestly');
+SELECT value FROM solution;
